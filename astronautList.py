@@ -11,12 +11,17 @@ class astronautList(generalList):
         generalList.appendItem(self, item)
 
     def createItem(self, code, surname="", name="", secname=""):
-        item = astronaut(code, surname, name, secname)
-        self.appendItem(item)
-        return item
+        if code in self.getCodes():
+            print("Космонавт с кодом %s уже существует" % (code,))
+        else:
+            item = astronaut(code, surname, name, secname)
+            self.appendItem(item)
+            return item
 
     def newItem(self, surname="", name="", secname=""):
-        return self.createItem(self.getNewCode(), surname, name, secname)
+        item = astronaut(self.getNewCode(), surname, name, secname)
+        self.appendItem(item)
+        return item
 
     def getInfoStr(self):
         """Экипаж через запятую: 'Гагарин Ю. А., Титов Г. С.'"""

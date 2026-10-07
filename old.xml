@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cosmos>
+  <astronaut code="1" surname="Гагарин" name="Юрий" secname="Алексеевич"/>
+  <astronaut code="2" surname="Титов" name="Герман" secname="Степанович"/>
+  <astronaut code="3" surname="Армстронг" name="Нил" secname="Олден"/>
+  <astronaut code="4" surname="Олдрин" name="Базз" secname=""/>
+  <astronaut code="5" surname="Терешкова" name="Валентина" secname="Владимировна"/>
+  <agency code="1" name='Госкорпорация "Роскосмос"' shortname="Роскосмос"/>
+  <agency code="2" name="National Aeronautics and Space Administration" shortname="NASA"/>
+  <agency code="3" name="European Space Agency" shortname="ESA"/>
+  <mission code="1" name="Восток-1" img="vostok1.png" year="1961" days="1" agency="1">
+    <astronaut code="1"/>
+  </mission>
+  <mission code="2" name="Apollo 11" img="apollo11.png" year="1969" days="8" agency="2">
+    <astronaut code="3"/>
+    <astronaut code="4"/>
+  </mission>
+  <mission code="3" name="Восток-6" img="vostok6.png" year="1963" days="3" agency="1">
+    <astronaut code="5"/>
+  </mission>
+</cosmos>

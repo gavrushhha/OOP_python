@@ -1,0 +1,156 @@
+@startuml Assignment02_XML
+skinparam classAttributeIconSize 0
+title Задание 2: космические миссии + XML
+
+class general {
+  -__code
+  -__name
+  +setCode()
+  +setName()
+  +getCode()
+  +getName()
+}
+
+class astronaut {
+  -__surname
+  -__secname
+  +setSurname()
+  +setSecname()
+  +getSurname()
+  +getSecname()
+  +getShortname()
+  +getShortsecname()
+  +getInfoStr()
+}
+
+class agency {
+  -__shortname
+  +setShortname()
+  +getShortname()
+}
+
+class mission {
+  -__crew
+  -__img
+  -__agency
+  -__days
+  -__year
+  +setImg()
+  +setAgency()
+  +setDays()
+  +setYear()
+  +getImg()
+  +getAgency()
+  +getAgencyCode()
+  +getAgencyName()
+  +getAgencyShortName()
+  +getDays()
+  +getYear()
+  +appendAstronaut()
+  +removeAstronaut()
+  +clearCrew()
+  +getAstronaut()
+  +getCrew()
+  +getAstronautCodes()
+  +getCrewInfoStr()
+  +getInfoStr()
+}
+
+class generalList {
+  -__list
+  +clear()
+  +findByCode()
+  +getNewCode()
+  +getCodes()
+  +getItems()
+  +appendItem()
+  +removeItem()
+}
+
+class astronautList {
+  +appendItem()
+  +createItem()
+  +newItem()
+  +getInfoStr()
+}
+
+class agencyList {
+  +appendItem()
+  +newItem()
+  +createItem()
+}
+
+class missionList {
+  +appendItem()
+  +createItem()
+  +newItem()
+}
+
+class cosmos {
+  -__astronautList
+  -__agencyList
+  -__missionList
+  +clear()
+  +createAstronaut()
+  +newAstronaut()
+  +removeAstronaut()
+  +getAstronaut()
+  +getAstronautList()
+  +getAstronautCodes()
+  +getAstronautNewCode()
+  +createAgency()
+  +newAgency()
+  +removeAgency()
+  +getAgency()
+  +getAgencyList()
+  +getAgencyCodes()
+  +getAgencyNewCode()
+  +createMission()
+  +newMission()
+  +removeMission()
+  +getMission()
+  +getMissionList()
+  +getMissionCodes()
+  +getMissionNewCode()
+}
+
+class data {
+  -__lib
+  -__inp
+  -__out
+  +setLib()
+  +setInp()
+  +setOut()
+  +getLib()
+  +getInp()
+  +getOut()
+  +readFile()
+  +writeFile()
+  +read()
+  +write()
+}
+
+class dataxml {
+  +read()
+  +write()
+}
+
+general <|-- astronaut
+general <|-- agency
+general <|-- mission
+general --o generalList
+astronaut --o astronautList
+generalList <|-- astronautList
+generalList <|-- agencyList
+generalList <|-- missionList
+mission o-- astronautList
+mission o-- agency
+agencyList o-- agency
+missionList o-- mission
+cosmos o-- astronautList
+cosmos o-- agencyList
+cosmos o-- missionList
+cosmos --o data
+data <|-- dataxml
+
+@enduml
