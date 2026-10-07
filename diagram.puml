@@ -1,0 +1,86 @@
+@startuml CosmicMissions
+skinparam classAttributeIconSize 0
+title Предметная область: космические миссии
+
+class general {
+  -__code
+  -__name
+  +setCode()
+  +setName()
+  +getCode()
+  +getName()
+}
+
+class astronaut {
+  -__surname
+  -__secname
+  +setSurname()
+  +setSecname()
+  +getSurname()
+  +getSecname()
+  +getShortname()
+  +getShortsecname()
+  +getInfoStr()
+}
+
+class agency {
+  -__shortname
+  +setShortname()
+  +getShortname()
+}
+
+class generalList {
+  -__list
+  +clear()
+  +findByCode()
+  +getNewCode()
+  +getCodes()
+  +getItems()
+  +appendItem()
+  +removeItem()
+}
+
+class astronautList {
+  +appendItem()
+  +createItem()
+  +newItem()
+  +getInfoStr()
+}
+
+class mission {
+  -__crew
+  -__img
+  -__agency
+  -__days
+  -__year
+  +setImg()
+  +setAgency()
+  +setDays()
+  +setYear()
+  +getImg()
+  +getAgency()
+  +getAgencyCode()
+  +getAgencyName()
+  +getAgencyShortName()
+  +getDays()
+  +getYear()
+  +appendAstronaut()
+  +removeAstronaut()
+  +clearCrew()
+  +getAstronaut()
+  +getCrew()
+  +getAstronautCodes()
+  +getCrewInfoStr()
+  +getInfoStr()
+}
+
+general <|-- astronaut
+general <|-- agency
+general <|-- mission
+general --o generalList
+astronaut --o astronautList
+generalList <|-- astronautList
+mission o-- astronautList
+mission o-- agency
+
+@enduml
