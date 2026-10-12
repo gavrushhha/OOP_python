@@ -1,0 +1,43 @@
+{
+  "astronauts": [
+    {"code": 1, "surname": "Гагарин", "name": "Юрий", "secname": "Алексеевич"},
+    {"code": 2, "surname": "Титов", "name": "Герман", "secname": "Степанович"},
+    {"code": 3, "surname": "Армстронг", "name": "Нил", "secname": "Олден"},
+    {"code": 4, "surname": "Олдрин", "name": "Базз", "secname": ""},
+    {"code": 5, "surname": "Терешкова", "name": "Валентина", "secname": "Владимировна"}
+  ],
+  "agencies": [
+    {"code": 1, "name": "Госкорпорация \"Роскосмос\"", "shortname": "Роскосмос"},
+    {"code": 2, "name": "National Aeronautics and Space Administration", "shortname": "NASA"},
+    {"code": 3, "name": "European Space Agency", "shortname": "ESA"}
+  ],
+  "missions": [
+    {
+      "code": 1,
+      "name": "Восток-1",
+      "img": "vostok1.png",
+      "year": 1961,
+      "days": 1,
+      "agency": 1,
+      "astronauts": [1]
+    },
+    {
+      "code": 2,
+      "name": "Apollo 11",
+      "img": "apollo11.png",
+      "year": 1969,
+      "days": 8,
+      "agency": 2,
+      "astronauts": [3, 4]
+    },
+    {
+      "code": 3,
+      "name": "Восток-6",
+      "img": "vostok6.png",
+      "year": 1963,
+      "days": 3,
+      "agency": 1,
+      "astronauts": [5]
+    }
+  ]
+}

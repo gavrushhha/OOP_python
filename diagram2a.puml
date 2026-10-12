@@ -1,0 +1,92 @@
+@startuml Assignment02a_JSON
+skinparam classAttributeIconSize 0
+title Задание 2a: космические миссии + JSON
+
+class general {
+  -__code
+  -__name
+  +setCode()
+  +setName()
+  +getCode()
+  +getName()
+}
+
+class astronaut {
+  -__surname
+  -__secname
+  +getInfoStr()
+}
+
+class agency {
+  -__shortname
+  +getShortname()
+}
+
+class mission {
+  -__crew
+  -__agency
+  -__days
+  -__year
+  -__img
+  +getInfoStr()
+}
+
+class generalList {
+  -__list
+  +findByCode()
+  +appendItem()
+  +removeItem()
+}
+
+class astronautList
+class agencyList
+class missionList
+
+class cosmos {
+  -__astronautList
+  -__agencyList
+  -__missionList
+  +createAstronaut()
+  +createAgency()
+  +createMission()
+  +getAstronautList()
+  +getAgencyList()
+  +getMissionList()
+}
+
+class data {
+  -__lib
+  -__inp
+  -__out
+  +read()
+  +write()
+  +readFile()
+  +writeFile()
+}
+
+class dataxml {
+  +read()
+  +write()
+}
+
+class datajson {
+  +read()
+  +write()
+}
+
+general <|-- astronaut
+general <|-- agency
+general <|-- mission
+generalList <|-- astronautList
+generalList <|-- agencyList
+generalList <|-- missionList
+mission o-- astronautList
+mission o-- agency
+cosmos o-- astronautList
+cosmos o-- agencyList
+cosmos o-- missionList
+cosmos --o data
+data <|-- dataxml
+data <|-- datajson
+
+@enduml

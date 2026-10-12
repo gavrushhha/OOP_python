@@ -5,6 +5,8 @@ dist/
 .idea/
 new2.xml
 new.xml
+new.json
+new2.json
 ooptask*.pdf
 __pycache__/
 *.py[cod]
