@@ -1,0 +1,50 @@
+@startuml Assignment04_Qt
+skinparam classAttributeIconSize 0
+title Задание 4: GUI PyQt5
+
+class cosmos
+class data
+class dataxml
+class datajson
+class datasql
+
+class mainWindow
+class tabWidget
+class page
+class missionPage
+class astronautPage
+class agencyPage
+
+class dbTableWidget
+class missionsTable
+class astronautsTable
+class agenciesTable
+
+class editForm
+class missionEditForm
+class astronautEditForm
+class agencyEditForm
+
+data <|-- dataxml
+data <|-- datajson
+data <|-- datasql
+cosmos --o data
+mainWindow o-- tabWidget
+mainWindow o-- cosmos
+mainWindow o-- dataxml
+mainWindow o-- datajson
+mainWindow o-- datasql
+tabWidget o-- missionPage
+tabWidget o-- astronautPage
+tabWidget o-- agencyPage
+page <|-- missionPage
+page <|-- astronautPage
+page <|-- agencyPage
+dbTableWidget <|-- missionsTable
+dbTableWidget <|-- astronautsTable
+dbTableWidget <|-- agenciesTable
+editForm <|-- missionEditForm
+editForm <|-- astronautEditForm
+editForm <|-- agencyEditForm
+
+@enduml

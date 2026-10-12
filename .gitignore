@@ -17,4 +17,5 @@ __pycache__/
 .Python
 .venv/
 venv/
+requirements.txt.bak
 .vscode/

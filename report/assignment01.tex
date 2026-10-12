@@ -1376,4 +1376,93 @@ Tereshkova V. V. Vostok-6 - Roscosmos, 1963. - 3 d.
 
 В задании~3 реализован класс \texttt{datasql} для чтения и записи каталога космических миссий в SQLite. Проверена цепочка обмена XML~$\to$~SQLite~$\to$~XML с использованием классов предыдущих заданий. Выполнены типовые запросы, построены диаграммы классов и ER.
 
+% =====================================================================
+% ЗАДАНИЕ 4
+% =====================================================================
+\clearpage
+\section{Задание 4. Графический интерфейс на PyQt5}
+
+\subsection{Постановка задачи}
+
+С использованием библиотеки для программирования графического интерфейса Qt сделать форму для вывода данных в табличной форме, хранящихся в форматах XML, JSON или в базе данных SQLite, с использованием функций из заданий~2 и~3.
+
+\subsection{Структура интерфейса}
+
+Главное окно содержит вкладки:
+\begin{itemize}[leftmargin=*]
+\item \textbf{миссии} --- таблица миссий и форма редактирования (экипаж, агентство, год, длительность, эмблема);
+\item \textbf{космонавты} --- таблица и форма ФИО;
+\item \textbf{агентства} --- таблица и форма названия / краткого названия.
+\end{itemize}
+
+На каждой вкладке: таблица сверху, форма редактирования снизу, кнопки <<Добавить>>, <<Изменить>>, <<Удалить>>. Меню \texttt{File} позволяет создать новый каталог, открыть и сохранить данные в XML, JSON и SQLite.
+
+\subsection{Базовые классы GUI}
+
+Класс \texttt{rowCode} хранит соответствие номеров строк виджета и кодов записей. Класс \texttt{libWidget} содержит ссылку на каталог \texttt{cosmos}. Класс \texttt{dbTableWidget} наследуется от \texttt{QTableWidget} и \texttt{libWidget}, заполняет таблицу через переопределяемый метод \texttt{setData()}.
+
+\begin{lstlisting}[caption={Фрагмент \texttt{dbTableWidget}}]
+class dbTableWidget(QTableWidget, libWidget):
+    def update(self, code=0):
+        self.clearContents()
+        self.setData()
+        self.resizeColumnsToContents()
+        self.resizeRowsToContents()
+        if code:
+            self.setCurrentCode(code)
+
+    def setData(self):
+        pass
+\end{lstlisting}
+
+Таблицы сущностей: \texttt{missionsTable}, \texttt{astronautsTable}, \texttt{agenciesTable}.
+
+\subsection{Формы редактирования}
+
+Базовый класс \texttt{editForm} задаёт сетку полей. Специализации:
+\texttt{missionEditForm}, \texttt{astronautEditForm}, \texttt{agencyEditForm}.
+Для миссии используются \texttt{astronautListWidget} (экипаж), \texttt{astronautCombo} (добавление в экипаж) и \texttt{agencyCombo} (выбор агентства).
+
+Страница \texttt{page} объединяет таблицу, форму и кнопки; классы \texttt{missionPage}, \texttt{astronautPage}, \texttt{agencyPage} собирают конкретные виджеты. Класс \texttt{tabWidget} размещает страницы на вкладках.
+
+\subsection{Главное окно}
+
+\begin{lstlisting}[caption={Запуск приложения \texttt{main4.py}}]
+from PyQt5.QtWidgets import QApplication
+from mainwindow import mainWindow
+import sys
+
+app = QApplication(sys.argv)
+mw = mainWindow()
+mw.show()
+sys.exit(app.exec_())
+\end{lstlisting}
+
+Класс \texttt{mainWindow} создаёт объект \texttt{cosmos} и объекты \texttt{dataxml}, \texttt{datajson}, \texttt{datasql}. Действия меню вызывают \texttt{readFile}/\texttt{writeFile} и обновляют вкладки через \texttt{tabWidget.update()}.
+
+Запуск (при установленном PyQt5):
+\begin{lstlisting}[language={},numbers=none]
+python3 main4.py
+\end{lstlisting}
+Далее: \texttt{File $\to$ Open XML} и выбор файла \texttt{old.xml} (или JSON/SQLite).
+
+\subsection{Диаграмма классов UML}
+
+Диаграмма классов GUI приведена на рисунке~\ref{fig:uml4}.
+
+% ============================================================
+% ВСТАВЬТЕ СЮДА UML ЗАДАНИЯ 4:
+% diagram4.puml -> report/diagram4.png
+% ============================================================
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{diagram4.png}
+\caption{Диаграмма классов для задания 4}
+\label{fig:uml4}
+\end{figure}
+
+\subsection{Выводы}
+
+В задании~4 реализован графический интерфейс на PyQt5 для просмотра и редактирования каталога космических миссий с загрузкой и сохранением данных в XML, JSON и SQLite через классы предыдущих заданий.
+
 \end{document}
