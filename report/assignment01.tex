@@ -1,0 +1,1177 @@
+\documentclass[a4paper,14pt]{extarticle}
+
+% --- Кодировка и язык ---
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+
+% --- Шрифт: Tempora (Times-совместимый шрифт с поддержкой T2A и жирности) ---
+\usepackage{tempora}
+
+% --- Поля: левое 25 мм, правое 15 мм, верх/низ 20 мм ---
+\RequirePackage[
+  a4paper, includehead, includefoot, mag=1000,
+  headsep=0mm, headheight=0mm,
+  left=25mm, right=15mm, top=20mm, bottom=20mm
+]{geometry}
+
+% --- Полуторный межстрочный интервал ---
+\usepackage{setspace}
+\onehalfspacing
+
+% --- Математика ---
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+
+% --- Таблицы, изображения ---
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage{ragged2e}
+\usepackage{pdfpages}
+
+% --- Листинги кода ---
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Внутри lstlisting только ASCII: кириллица в listings + pdflatex
+% даёт ошибку "TeX capacity exceeded [grouping levels=255]".
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape\color{gray},
+  stringstyle=\ttfamily,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  framerule=0.4pt,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=6pt,
+  xleftmargin=1.5em,
+  framexleftmargin=1.2em,
+  tabsize=4,
+  captionpos=b
+}
+\lstset{style=pythonstyle}
+
+% --- Гиперссылки ---
+\usepackage[hidelinks]{hyperref}
+
+% --- Подписи ---
+\DeclareCaptionLabelSeparator{emdash}{~--- }
+\captionsetup[table]{
+  labelsep=emdash,
+  singlelinecheck=false,
+  justification=raggedright,
+  position=top,
+  font=normalsize
+}
+\captionsetup[figure]{
+  labelsep=emdash,
+  singlelinecheck=false,
+  justification=centering,
+  position=bottom,
+  font=normalsize
+}
+\captionsetup[lstlisting]{
+  labelsep=emdash,
+  singlelinecheck=false,
+  justification=raggedright,
+  font=normalsize
+}
+
+\usepackage{chngcntr}
+\counterwithin{table}{section}
+\counterwithin{figure}{section}
+\counterwithin{equation}{section}
+
+% --- Заголовки разделов ---
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\section}{\parindent}{1em}{1em}
+\titlespacing*{\subsection}{\parindent}{1em}{0.5em}
+
+\setlength{\parindent}{1.25cm}
+
+\newcommand{\struchead}[1]{%
+  \clearpage
+  \phantomsection
+  \addcontentsline{toc}{section}{#1}%
+  \begin{center}\textbf{\MakeUppercase{#1}}\end{center}\par\vspace{0.5em}
+}
+
+% --- Нумерация страниц снизу справа ---
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyfoot[R]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% --- Содержание ---
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{\hfill\bfseries\normalsize\MakeUppercase}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\setcounter{tocdepth}{2}
+\renewcommand{\contentsname}{Содержание}
+\renewcommand{\cftsecaftersnum}{\hspace{0.5em}}
+\renewcommand{\cftsubsecaftersnum}{\hspace{0.5em}}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsubsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+\renewcommand{\cftsubsecpagefont}{\normalfont}
+\renewcommand{\cftsecdotsep}{\cftdotsep}
+\renewcommand{\cftsubsecdotsep}{\cftdotsep}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftsecdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftsubsecdotsep}}
+% Отступы в содержании: задание (section) и подпункты (subsection)
+\cftsetindents{section}{1.25cm}{2em}
+\cftsetindents{subsection}{2.5cm}{3em}
+
+\begin{document}
+
+% ===================== ТИТУЛЬНЫЙ ЛИСТ =====================
+% Если есть свой титульный PDF --- раскомментируйте строку ниже:
+% \includepdf[pages={1}]{titulOtchet.pdf}
+
+\begin{titlepage}
+\centering
+\vspace*{1cm}
+{\large Саратовский национальный исследовательский государственный}\\[0.3em]
+{\large университет имени Н.~Г.~Чернышевского}\\[0.5em]
+{\large Механико-математический факультет}\\[0.3em]
+{\large Кафедра математического и компьютерного моделирования}\\[2cm]
+
+{\Large\bfseries Отчёт по учебной дисциплине}\\[0.5em]
+{\Large\bfseries <<Основы объектно-ориентированного программирования>>}\\[1.5cm]
+
+{\large Задание 1}\\[0.5em]
+{\large Предметная область: космические миссии}\\[3cm]
+
+\begin{flushright}
+\begin{tabular}{l}
+Студент: \underline{\hspace{5.5cm}}\\[1em]
+Группа: \underline{\hspace{5.5cm}}\\[1em]
+Преподаватель: Иванов~С.~В.
+\end{tabular}
+\end{flushright}
+
+\vfill
+Саратов --- \the\year
+\end{titlepage}
+
+% ===================== СОДЕРЖАНИЕ (отдельная страница) =====================
+\setcounter{page}{2}
+\tableofcontents
+\thispagestyle{fancy}
+\clearpage
+
+% =====================================================================
+% ЗАДАНИЕ 1  (далее будут \section{Задание 2. ...}, \section{Задание 3. ...})
+% =====================================================================
+\section{Задание 1. Классы предметной области}
+
+\subsection{Постановка задачи}
+
+В выбранной предметной области определить не менее трёх связанных между собой сущностей и их атрибуты. На языке Python описать классы, соответствующие найденным сущностям. Создать объекты описанной связки классов. Реализовать запросы, рекомендованные преподавателем. Для полученной программы построить диаграмму классов UML. При программировании каждый класс описывается в отдельном модуле (файле).
+
+\subsection{Предметная область}
+
+В качестве предметной области выбраны \textbf{космические миссии}. Необходимо хранить информацию о космонавтах, космических агентствах и миссиях.
+
+В рассматриваемой предметной области выделены следующие классы:
+\begin{itemize}[leftmargin=*,itemsep=2pt,topsep=4pt]
+\item \textbf{космонавт} (\texttt{astronaut}) --- содержит информацию о космонавте и имеет следующие атрибуты:
+  \begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item код (\texttt{code}) --- код, позволяющий однозначно определить космонавта, т.\,к.\ значения остальных атрибутов (ФИО) могут совпадать;
+  \item фамилия (\texttt{surname});
+  \item имя (\texttt{name});
+  \item отчество (\texttt{secname});
+  \item инициалы (\texttt{shortname}, \texttt{shortsecname}).
+  \end{itemize}
+\item \textbf{агентство} (\texttt{agency}) --- содержит информацию о космическом агентстве и имеет следующие атрибуты:
+  \begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item код (\texttt{code});
+  \item имя (\texttt{name}) --- полное название агентства;
+  \item сокращённое обозначение (\texttt{shortname}), например <<Роскосмос>>, <<NASA>>.
+  \end{itemize}
+\item \textbf{миссия} (\texttt{mission}) --- содержит информацию о космической миссии и имеет следующие атрибуты:
+  \begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item код (\texttt{code});
+  \item имя (\texttt{name}) --- название миссии;
+  \item длительность в днях (\texttt{days});
+  \item год запуска (\texttt{year});
+  \item эмблема / изображение (\texttt{img});
+  \item агентство (\texttt{agency}) --- объект класса \texttt{agency};
+  \item экипаж (\texttt{crew}) --- список объектов класса \texttt{astronaut}.
+  \end{itemize}
+\end{itemize}
+
+Как видно из приведённого списка, все классы имеют сходные атрибуты --- \texttt{code} и \texttt{name}. В этом случае их можно выделить в отдельный класс-предок. Подобное выделение общих свойств называется \textbf{обобщением} (generalization). Назовём этот класс \texttt{general}.
+
+\subsection{Класс general}
+
+Ниже приведён листинг модуля \texttt{general.py}. Данный модуль включает описание класса \texttt{general}.
+
+\begin{lstlisting}[caption={Модуль \texttt{general.py}}]
+class general:
+    def __init__(self, code=0, name=""):
+        self.setCode(code)
+        self.setName(name)
+
+    def setCode(self, value):
+        self.__code = value
+
+    def setName(self, value):
+        self.__name = value
+
+    def getCode(self):
+        return self.__code
+
+    def getName(self):
+        return self.__name
+\end{lstlisting}
+
+Описание класса:
+\begin{lstlisting}
+class general:
+\end{lstlisting}
+
+Далее описывается конструктор класса.
+\begin{lstlisting}
+def __init__(self, code=0, name=""):
+    self.setCode(code)
+    self.setName(name)
+\end{lstlisting}
+
+В данном случае конструктор позволяет при создании объекта задать начальные значения атрибутов. В заголовке функции перечислены входные параметры (\texttt{code}, \texttt{name}) и их значения по умолчанию. Первый параметр (\texttt{self}) является ссылкой объекта на самого себя, чтобы внутри методов обращаться к своим атрибутам и методам.
+
+Поля и методы, название которых начинается с двойного подчёркивания, являются \textbf{приватными}. Если нужно сделать атрибуты доступными для просмотра и редактирования, описываются соответствующие открытые методы. Их принято называть по названию атрибута, добавляя слова \texttt{get} и \texttt{set}.
+
+\begin{lstlisting}
+def setCode(self, value):
+    self.__code = value
+
+def setName(self, value):
+    self.__name = value
+\end{lstlisting}
+
+Get-методы возвращают значения атрибутов:
+\begin{lstlisting}
+def getCode(self):
+    return self.__code
+
+def getName(self):
+    return self.__name
+\end{lstlisting}
+
+\subsection{Класс astronaut}
+
+Далее опишем класс \texttt{astronaut} в модуле \texttt{astronaut.py}.
+
+\begin{lstlisting}[caption={Модуль \texttt{astronaut.py}}]
+from general import general
+
+class astronaut(general):
+    def __init__(self, code=0, surname="", name="", secname=""):
+        general.__init__(self, code, name)
+        self.setSurname(surname)
+        self.setSecname(secname)
+
+    def setSurname(self, value):
+        self.__surname = value
+
+    def setSecname(self, value):
+        self.__secname = value
+
+    def getSurname(self):
+        return self.__surname
+
+    def getSecname(self):
+        return self.__secname
+
+    def getShortname(self):
+        if self.getName():
+            return self.getName()[0]
+        return ""
+
+    def getShortsecname(self):
+        if self.getSecname():
+            return self.getSecname()[0]
+        return ""
+
+    def getInfoStr(self):
+        s = self.getSurname()
+        if self.getShortname():
+            s += " %s." % (self.getShortname(),)
+        if self.getShortsecname():
+            s += " %s." % (self.getShortsecname(),)
+        return s
+\end{lstlisting}
+
+В начале подключается модуль \texttt{general.py}, содержащий класс-предок:
+\begin{lstlisting}
+from general import general
+\end{lstlisting}
+
+Если класс наследуется от другого класса, название класса-предка указывается в скобках после имени наследуемого класса:
+\begin{lstlisting}
+class astronaut(general):
+\end{lstlisting}
+
+Чтобы класс унаследовал свойства предка, в конструкторе вызывается конструктор класса-предка:
+\begin{lstlisting}
+general.__init__(self, code, name)
+\end{lstlisting}
+
+Методы \texttt{getShortname()} и \texttt{getShortsecname()} возвращают инициалы имени и отчества. Метод \texttt{getInfoStr()} формирует краткую запись вида <<Гагарин Ю.~А.>>.
+
+\subsection{Класс agency}
+
+Аналогичным образом описываем класс \texttt{agency} в модуле \texttt{agency.py}.
+
+\begin{lstlisting}[caption={Модуль \texttt{agency.py}}]
+from general import general
+
+class agency(general):
+    def __init__(self, code=0, name="", shortname=""):
+        general.__init__(self, code, name)
+        self.setShortname(shortname)
+
+    def setShortname(self, value):
+        self.__shortname = value
+
+    def getShortname(self):
+        return self.__shortname
+\end{lstlisting}
+
+Класс \texttt{agency} наследует \texttt{code} и \texttt{name} от \texttt{general} и добавляет атрибут \texttt{shortname} --- краткое обозначение агентства.
+
+\subsection{Класс generalList}
+
+При описании класса \texttt{mission} обратим внимание на то, что миссия может иметь несколько космонавтов в экипаже, следовательно одним из атрибутов станет не один объект \texttt{astronaut}, а список таких объектов. Кроме того необходимы операции добавления и удаления космонавта и доступ по коду. Целесообразно выделить список в отдельный класс. В дальнейшем понадобятся аналогичные списки миссий и агентств, поэтому общие методы списков выделяются в класс-предок \texttt{generalList} (модуль \texttt{generalList.py}).
+
+\begin{lstlisting}[caption={Модуль \texttt{generalList.py}}]
+class generalList:
+    def __init__(self):
+        self.__list = []
+
+    def clear(self):
+        self.__list = []
+
+    def findByCode(self, code):
+        for item in self.__list:
+            if item.getCode() == code:
+                return item
+
+    def getNewCode(self):
+        codes = self.getCodes()
+        if codes:
+            return max(codes) + 1
+        return 1
+
+    def getCodes(self):
+        return [item.getCode() for item in self.__list]
+
+    def getItems(self):
+        return list(self.__list)
+
+    def appendItem(self, item):
+        self.__list.append(item)
+
+    def removeItem(self, code):
+        item = self.findByCode(code)
+        if item is not None:
+            self.__list.remove(item)
+            return True
+        return False
+\end{lstlisting}
+
+Объекты хранятся в приватном списке \texttt{\_\_list}, который инициализируется в конструкторе. Метод \texttt{clear()} очищает список. Метод \texttt{findByCode(code)} возвращает ссылку на объект по значению атрибута \texttt{code}. Метод \texttt{getNewCode()} возвращает следующий свободный код. Метод \texttt{getCodes()} возвращает список кодов объектов. Методы \texttt{appendItem} и \texttt{removeItem} добавляют и удаляют элементы.
+
+\subsection{Класс astronautList}
+
+От класса \texttt{generalList} наследуем класс \texttt{astronautList}, который содержит список космонавтов и функции доступа к ним (модуль \texttt{astronautList.py}).
+
+\begin{lstlisting}[caption={Модуль \texttt{astronautList.py}}]
+from astronaut import astronaut
+from generalList import generalList
+
+class astronautList(generalList):
+    def appendItem(self, item):
+        if not isinstance(item, astronaut):
+            raise TypeError("astronautList accepts only astronaut")
+        generalList.appendItem(self, item)
+
+    def createItem(self, code, surname="", name="", secname=""):
+        item = astronaut(code, surname, name, secname)
+        self.appendItem(item)
+        return item
+
+    def newItem(self, surname="", name="", secname=""):
+        return self.createItem(self.getNewCode(), surname, name, secname)
+
+    def getInfoStr(self):
+        return ", ".join(item.getInfoStr() for item in self.getItems())
+\end{lstlisting}
+
+Метод \texttt{appendItem} переопределён: в список можно добавлять только объекты класса \texttt{astronaut}. Метод \texttt{createItem} создаёт космонавта с заданным кодом, \texttt{newItem} --- с автоматически сгенерированным кодом. Метод \texttt{getInfoStr()} возвращает строку экипажа через запятую, например <<Гагарин Ю.~А., Титов Г.~С.>>.
+
+\subsection{Класс mission}
+
+Далее описываем класс \texttt{mission} в модуле \texttt{mission.py}.
+
+\begin{lstlisting}[caption={Модуль \texttt{mission.py}}]
+from astronautList import astronautList
+from general import general
+
+class mission(general):
+    def __init__(self, code=0, name="", agency=None,
+                 year=0, days=0, img=""):
+        general.__init__(self, code, name)
+        self.__crew = astronautList()
+        self.setAgency(agency)
+        self.setDays(days)
+        self.setYear(year)
+        self.setImg(img)
+
+    def setImg(self, value):
+        self.__img = value
+
+    def setAgency(self, value):
+        self.__agency = value
+
+    def setDays(self, value):
+        self.__days = value
+
+    def setYear(self, value):
+        self.__year = value
+
+    def getImg(self):
+        return self.__img
+
+    def getAgency(self):
+        return self.__agency
+
+    def getAgencyCode(self):
+        if self.__agency:
+            return self.__agency.getCode()
+
+    def getAgencyName(self):
+        if self.__agency:
+            return self.__agency.getName()
+        return ""
+
+    def getAgencyShortName(self):
+        if self.__agency:
+            return self.__agency.getShortname()
+        return ""
+
+    def getDays(self):
+        return self.__days
+
+    def getYear(self):
+        return self.__year
+
+    def appendAstronaut(self, item):
+        self.__crew.appendItem(item)
+
+    def removeAstronaut(self, code):
+        return self.__crew.removeItem(code)
+
+    def clearCrew(self):
+        self.__crew.clear()
+
+    def getAstronaut(self, code):
+        return self.__crew.findByCode(code)
+
+    def getCrew(self):
+        return self.__crew
+
+    def getAstronautCodes(self):
+        return self.__crew.getCodes()
+
+    def getCrewInfoStr(self):
+        return self.__crew.getInfoStr()
+
+    def getInfoStr(self):
+        s = self.getCrewInfoStr()
+        if s:
+            s += " "
+        s += "%s - %s, %s. - %s d." % (
+            self.getName(),
+            self.getAgencyShortName(),
+            str(self.getYear()),
+            str(self.getDays()),
+        )
+        return s
+\end{lstlisting}
+
+В конструкторе используется конструктор класса-предка. В качестве атрибута экипажа используется объект класса \texttt{astronautList}. Значение по умолчанию для ссылки на агентство задаётся как \texttt{None}.
+
+Метод \texttt{getInfoStr()} возвращает сводку по миссии в формате:
+\begin{center}
+\textit{Гагарин Ю.~А. Восток-1 --- Роскосмос, 1961. --- 1 дн.}
+\end{center}
+
+\subsection{Демонстрационная программа}
+
+Программа в файле \texttt{main.py} создаёт объекты описанных классов и демонстрирует работу запросов.
+
+\begin{lstlisting}[caption={Фрагмент модуля \texttt{main.py}: создание объектов}]
+from agency import agency
+from astronaut import astronaut
+from mission import mission
+
+roscosmos = agency(1, "Roscosmos", "Roscosmos")
+nasa = agency(2, "National Aeronautics and Space Administration", "NASA")
+
+gagarin = astronaut(1, "Gagarin", "Yuri", "Alekseevich")
+armstrong = astronaut(3, "Armstrong", "Neil", "Alden")
+aldrin = astronaut(4, "Aldrin", "Buzz", "")
+
+vostok1 = mission(1, "Vostok-1", roscosmos, year=1961, days=1,
+                  img="vostok1.png")
+vostok1.appendAstronaut(gagarin)
+
+apollo11 = mission(2, "Apollo 11", nasa, year=1969, days=8,
+                   img="apollo11.png")
+apollo11.appendAstronaut(armstrong)
+apollo11.appendAstronaut(aldrin)
+
+print(vostok1.getInfoStr())
+print(apollo11.getInfoStr())
+\end{lstlisting}
+
+Создаются объекты классов \texttt{agency} и \texttt{astronaut}, затем объекты \texttt{mission}; космонавты добавляются в экипаж методом \texttt{appendAstronaut}. Метод \texttt{getInfoStr()} выводит сводку по миссии.
+
+Результат выполнения программы (фрагмент):
+\begin{quote}
+\ttfamily\footnotesize
+Gagarin Y. A. Vostok-1 - Roscosmos, 1961. - 1 d.\\
+Armstrong N. A., Aldrin B. Apollo 11 - NASA, 1969. - 8 d.
+\end{quote}
+
+\noindent В реальном коде программы используются русские строки (<<Гагарин Ю.~А. Восток-1 --- Роскосмос, 1961. --- 1 дн.>> и~т.\,д.); в листингах отчёта кириллица заменена на латиницу из\-за ограничений пакета \texttt{listings} при компиляции pdfLaTeX.
+
+Реализованы также запросы: поиск миссии по коду, вывод миссий выбранного агентства, поиск миссий с участием заданного космонавта, добавление и удаление членов экипажа, генерация нового кода через \texttt{getNewCode()} / \texttt{newItem()}.
+
+\subsection{Диаграмма классов UML}
+
+Диаграмма классов полученной программы приведена на рисунке~\ref{fig:uml1}.
+
+% ============================================================
+% ВСТАВЬТЕ СЮДА КАРТИНКУ UML:
+% 1) Сгенерируйте диаграмму на plantuml.com (скрипт diagram.puml)
+% 2) Сохраните файл как report/diagram1.png (или .pdf)
+% 3) При необходимости поправьте имя файла ниже
+% ============================================================
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{diagram1.png}
+\caption{Диаграмма классов для задания 1}
+\label{fig:uml1}
+\end{figure}
+
+Скрипт PlantUML для диаграммы классов содержится в файле \texttt{diagram.puml} проекта.
+
+\subsection{Выводы}
+
+В ходе выполнения задания~1 для предметной области <<космические миссии>> выделены связанные сущности \texttt{astronaut}, \texttt{agency} и \texttt{mission}. Общие атрибуты вынесены в класс-предок \texttt{general}, общие операции над коллекциями --- в \texttt{generalList}. Реализованы наследование, инкапсуляция и агрегация (миссия содержит экипаж и ссылку на агентство). Созданы объекты связки классов, выполнены типовые запросы, построена диаграмма классов UML.
+
+% =====================================================================
+% ЗАДАНИЕ 2
+% =====================================================================
+\clearpage
+\section{Задание 2. Чтение и запись данных в формате XML}
+
+\subsection{Постановка задачи}
+
+Написать функции для считывания и записи данных о выбранных сущностях из файла в формате XML, используя при этом классы, полученные при выполнении задания~1. Для полученной программы построить диаграмму классов UML. Реализовать запросы, рекомендованные преподавателем. Для демонстрации работы функции организовать вывод данных на экран в консоли.
+
+\subsection{Исходный XML-файл}
+
+В текстовом редакторе создан файл \texttt{old.xml}. В нём записаны данные о космонавтах, агентствах и миссиях в формате XML (ниже --- латинская версия листинга; в рабочем файле проекта используются русские строки).
+
+\begin{lstlisting}[language={},caption={Файл \texttt{old.xml} (фрагмент структуры)}]
+<?xml version="1.0" encoding="utf-8"?>
+<cosmos>
+  <astronaut code="1" surname="Gagarin" name="Yuri"
+             secname="Alekseevich"/>
+  <astronaut code="3" surname="Armstrong" name="Neil"
+             secname="Alden"/>
+  <astronaut code="4" surname="Aldrin" name="Buzz" secname=""/>
+  <agency code="1" name="Roscosmos" shortname="Roscosmos"/>
+  <agency code="2" name="NASA" shortname="NASA"/>
+  <mission code="1" name="Vostok-1" img="vostok1.png"
+           year="1961" days="1" agency="1">
+    <astronaut code="1"/>
+  </mission>
+  <mission code="2" name="Apollo 11" img="apollo11.png"
+           year="1969" days="8" agency="2">
+    <astronaut code="3"/>
+    <astronaut code="4"/>
+  </mission>
+</cosmos>
+\end{lstlisting}
+
+Корневой элемент --- \texttt{cosmos}. Внутри него перечисляются элементы \texttt{astronaut}, \texttt{agency} и \texttt{mission}. У миссии вложенные элементы \texttt{astronaut} задают экипаж по кодам; атрибут \texttt{agency} ссылается на код агентства.
+
+\subsection{Списки agencyList и missionList}
+
+Для хранения считанных данных потребуются списки космонавтов, агентств и миссий. Список космонавтов уже реализован в задании~1 (\texttt{astronautList}). Добавим модули \texttt{agencyList.py} и \texttt{missionList.py}.
+
+\begin{lstlisting}[caption={Модуль \texttt{agencyList.py}}]
+from agency import agency
+from generalList import generalList
+
+class agencyList(generalList):
+    def appendItem(self, value):
+        if isinstance(value, agency):
+            generalList.appendItem(self, value)
+
+    def newItem(self, name, shortname=""):
+        a = agency(self.getNewCode(), name, shortname)
+        self.appendItem(a)
+        return a
+
+    def createItem(self, code, name, shortname=""):
+        if code in self.getCodes():
+            print("Agency with code %s already exists" % (code,))
+        else:
+            a = agency(code, name, shortname)
+            self.appendItem(a)
+            return a
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Модуль \texttt{missionList.py}}]
+from generalList import generalList
+from mission import mission
+
+class missionList(generalList):
+    def appendItem(self, value):
+        if isinstance(value, mission):
+            generalList.appendItem(self, value)
+
+    def createItem(self, code, name, agency=None,
+                   year=0, days=0, img=""):
+        if code in self.getCodes():
+            print("Mission with code %s already exists" % (code,))
+        else:
+            m = mission(code, name, agency, year, days, img)
+            self.appendItem(m)
+            return m
+
+    def newItem(self, name, agency=None, year=0, days=0, img=""):
+        m = mission(self.getNewCode(), name, agency, year, days, img)
+        self.appendItem(m)
+        return m
+\end{lstlisting}
+
+Метод \texttt{appendItem} принимает только объекты нужного типа. Методы \texttt{createItem} и \texttt{newItem} создают элемент с заданным или автоматически сгенерированным кодом.
+
+\subsection{Класс cosmos}
+
+Все списки объектов хранятся в объекте класса \texttt{cosmos} (аналог класса \texttt{library} из методички). Класс также содержит функции создания и удаления объектов.
+
+\begin{lstlisting}[caption={Модуль \texttt{cosmos.py} (основные методы)}]
+from agencyList import agencyList
+from astronautList import astronautList
+from missionList import missionList
+
+class cosmos:
+    def __init__(self):
+        self.__astronautList = astronautList()
+        self.__agencyList = agencyList()
+        self.__missionList = missionList()
+
+    def clear(self):
+        self.__missionList.clear()
+        self.__astronautList.clear()
+        self.__agencyList.clear()
+
+    def createAstronaut(self, code, surname, name="", secname=""):
+        return self.__astronautList.createItem(
+            code, surname, name, secname)
+
+    def getAstronaut(self, code):
+        return self.__astronautList.findByCode(code)
+
+    def getAstronautList(self):
+        return self.__astronautList.getItems()
+
+    def getAstronautCodes(self):
+        return self.__astronautList.getCodes()
+
+    def createAgency(self, code, name, shortname=""):
+        return self.__agencyList.createItem(code, name, shortname)
+
+    def getAgency(self, code):
+        return self.__agencyList.findByCode(code)
+
+    def getAgencyList(self):
+        return self.__agencyList.getItems()
+
+    def createMission(self, code, name, agency=None,
+                      year=0, days=0, img=""):
+        return self.__missionList.createItem(
+            code, name, agency, year, days, img)
+
+    def getMission(self, code):
+        return self.__missionList.findByCode(code)
+
+    def getMissionList(self):
+        return self.__missionList.getItems()
+
+    def getMissionCodes(self):
+        return self.__missionList.getCodes()
+\end{lstlisting}
+
+При удалении космонавта он также убирается из экипажей всех миссий; при удалении агентства у связанных миссий ссылка на агентство обнуляется (\texttt{setAgency(None)}).
+
+\subsection{Класс data}
+
+С учётом последующих заданий (JSON, SQL) реализован класс \texttt{data} --- общий предок для всех классов чтения и записи. Различаться наследники будут только методами \texttt{read()} и \texttt{write()}, зависящими от формата.
+
+\begin{lstlisting}[caption={Модуль \texttt{data.py}}]
+class data:
+    def __init__(self, lib=None, inp="", out=""):
+        self.setLib(lib)
+        self.setInp(inp)
+        self.setOut(out)
+
+    def setLib(self, value):
+        self.__lib = value
+
+    def setInp(self, value):
+        self.__inp = value
+
+    def setOut(self, value):
+        self.__out = value
+
+    def getLib(self):
+        return self.__lib
+
+    def getInp(self):
+        return self.__inp
+
+    def getOut(self):
+        return self.__out
+
+    def readFile(self, lib=None, filename=""):
+        if lib:
+            self.setLib(lib)
+        if filename:
+            self.setInp(filename)
+        self.read()
+
+    def writeFile(self, lib=None, filename=""):
+        if lib:
+            self.setLib(lib)
+        if filename:
+            self.setOut(filename)
+        self.write()
+
+    def read(self):
+        pass
+
+    def write(self):
+        pass
+\end{lstlisting}
+
+Атрибуты: \texttt{lib} --- ссылка на каталог \texttt{cosmos}, \texttt{inp} / \texttt{out} --- имена входного и выходного файлов. Методы \texttt{read()} и \texttt{write()} в базовом классе пустые (заглушки).
+
+\subsection{Класс dataxml}
+
+Класс \texttt{dataxml} наследуется от \texttt{data}; в нём переопределены методы \texttt{read()} и \texttt{write()} для работы с XML через модуль \texttt{xml.dom.minidom}.
+
+\begin{lstlisting}[caption={Модуль \texttt{dataxml.py}: метод \texttt{read()}}]
+import xml.dom.minidom
+from data import data
+
+class dataxml(data):
+    def read(self):
+        dom = xml.dom.minidom.parse(self.getInp())
+        dom.normalize()
+        for node in dom.childNodes[0].childNodes:
+            if (node.nodeType == node.ELEMENT_NODE) and \
+               (node.nodeName == "astronaut"):
+                code, surname, name, secname = 0, "", "", ""
+                for t in node.attributes.items():
+                    if t[0] == "code":
+                        code = int(t[1])
+                    if t[0] == "name":
+                        name = t[1]
+                    if t[0] == "surname":
+                        surname = t[1]
+                    if t[0] == "secname":
+                        secname = t[1]
+                self.getLib().createAstronaut(
+                    code, surname, name, secname)
+
+            if (node.nodeType == node.ELEMENT_NODE) and \
+               (node.nodeName == "agency"):
+                code, name, shortname = 0, "", ""
+                for t in node.attributes.items():
+                    if t[0] == "code":
+                        code = int(t[1])
+                    if t[0] == "name":
+                        name = t[1]
+                    if t[0] == "shortname":
+                        shortname = t[1]
+                self.getLib().createAgency(code, name, shortname)
+
+            if (node.nodeType == node.ELEMENT_NODE) and \
+               (node.nodeName == "mission"):
+                code, name, img = 0, "", ""
+                agency, year, days = None, 0, 0
+                for t in node.attributes.items():
+                    if t[0] == "code":
+                        code = int(t[1])
+                    if t[0] == "name":
+                        name = t[1]
+                    if t[0] == "img":
+                        img = t[1]
+                    if t[0] == "year":
+                        year = int(t[1])
+                    if t[0] == "days":
+                        days = int(t[1])
+                    if t[0] == "agency":
+                        agency = self.getLib().getAgency(int(t[1]))
+                m = self.getLib().createMission(
+                    code, name, agency, year, days, img)
+                for n in node.childNodes:
+                    if (n.nodeType == n.ELEMENT_NODE) and \
+                       (n.nodeName == "astronaut"):
+                        for t in n.attributes.items():
+                            if t[0] == "code":
+                                person = self.getLib().getAstronaut(
+                                    int(t[1]))
+                                if person and m:
+                                    m.appendAstronaut(person)
+\end{lstlisting}
+
+Сначала читаются космонавты и агентства, затем миссии: для миссии по коду находится объект агентства, создаётся миссия, в экипаж добавляются космонавты по вложенным элементам \texttt{astronaut}.
+
+\begin{lstlisting}[caption={Модуль \texttt{dataxml.py}: метод \texttt{write()}}]
+    def write(self):
+        dom = xml.dom.minidom.Document()
+        root = dom.createElement("cosmos")
+        dom.appendChild(root)
+
+        for a in self.getLib().getAstronautList():
+            aut = dom.createElement("astronaut")
+            aut.setAttribute("code", str(a.getCode()))
+            aut.setAttribute("surname", a.getSurname())
+            aut.setAttribute("name", a.getName())
+            aut.setAttribute("secname", a.getSecname())
+            root.appendChild(aut)
+
+        for p in self.getLib().getAgencyList():
+            ag = dom.createElement("agency")
+            ag.setAttribute("code", str(p.getCode()))
+            ag.setAttribute("name", p.getName())
+            ag.setAttribute("shortname", p.getShortname())
+            root.appendChild(ag)
+
+        for m in self.getLib().getMissionList():
+            ms = dom.createElement("mission")
+            ms.setAttribute("code", str(m.getCode()))
+            ms.setAttribute("name", m.getName())
+            ms.setAttribute("img", m.getImg())
+            ms.setAttribute("year", str(m.getYear()))
+            ms.setAttribute("days", str(m.getDays()))
+            agency_code = m.getAgencyCode()
+            ms.setAttribute(
+                "agency",
+                str(agency_code) if agency_code is not None else "")
+            for ac in m.getAstronautCodes():
+                aut = dom.createElement("astronaut")
+                aut.setAttribute("code", str(ac))
+                ms.appendChild(aut)
+            root.appendChild(ms)
+
+        with open(self.getOut(), "w", encoding="utf-8") as f:
+            f.write(dom.toprettyxml())
+\end{lstlisting}
+
+Метод \texttt{write()} строит XML-документ, заполняет его данными из каталога и сохраняет в файл \texttt{out} с кодировкой UTF-8.
+
+\subsection{Демонстрационная программа}
+
+Программа в файле \texttt{main2.py} создаёт объекты классов \texttt{cosmos} и \texttt{dataxml}, читает \texttt{old.xml}, выводит данные в консоль и записывает \texttt{new.xml}.
+
+\begin{lstlisting}[caption={Модуль \texttt{main2.py}}]
+from cosmos import cosmos
+from dataxml import dataxml
+
+catalog = cosmos()
+dat = dataxml(catalog, "old.xml", "new.xml")
+dat.read()
+
+for m in catalog.getMissionList():
+    print(m.getInfoStr())
+
+dat.write()
+\end{lstlisting}
+
+Импортируются необходимые классы, создаётся каталог и объект \texttt{dataxml} с указанием входного и выходного файлов. Вызов \texttt{read()} заполняет каталог; цикл по миссиям выводит сводки; \texttt{write()} сохраняет данные в \texttt{new.xml}.
+
+Результат выполнения (фрагмент):
+\begin{quote}
+\ttfamily\footnotesize
+Gagarin Y. A. Vostok-1 - Roscosmos, 1961. - 1 d.\\
+Armstrong N. A., Aldrin B. Apollo 11 - NASA, 1969. - 8 d.\\
+Tereshkova V. V. Vostok-6 - Roscosmos, 1963. - 3 d.
+\end{quote}
+
+Дополнительно реализованы запросы: вывод миссий выбранного агентства, поиск космонавта по коду, контрольное перечитывание записанного файла \texttt{new.xml}.
+
+\subsection{Диаграмма классов UML}
+
+Диаграмма классов для заданий~2 (и последующих форматов данных) приведена на рисунке~\ref{fig:uml2}. По сравнению с заданием~1 добавлены классы \texttt{agencyList}, \texttt{missionList}, \texttt{cosmos}, \texttt{data}, \texttt{dataxml}.
+
+% ============================================================
+% ВСТАВЬТЕ СЮДА КАРТИНКУ UML ЗАДАНИЯ 2:
+% 1) Сгенерируйте диаграмму на plantuml.com (скрипт diagram2.puml)
+% 2) Сохраните файл как report/diagram2.png
+% ============================================================
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{diagram2.png}
+\caption{Диаграмма классов для задания 2}
+\label{fig:uml2}
+\end{figure}
+
+Скрипт PlantUML содержится в файле \texttt{diagram2.puml} проекта.
+
+\subsection{Выводы}
+
+В задании~2 на основе классов задания~1 реализованы контейнер \texttt{cosmos}, специализированные списки и иерархия \texttt{data}~/~\texttt{dataxml} для чтения и записи XML. Данные из \texttt{old.xml} загружаются в объекты, обрабатываются запросами и сохраняются в \texttt{new.xml}. Построена диаграмма классов UML.
+
+% =====================================================================
+% ЗАДАНИЕ 2a
+% =====================================================================
+\clearpage
+\section{Задание 2a. Чтение и запись данных в формате JSON}
+
+\subsection{Постановка задачи}
+
+Написать функции для считывания и записи данных о выбранных сущностях из файла в формате JSON, используя при этом классы, полученные при выполнении задания~1. Для полученной программы построить диаграмму классов UML. Реализовать запросы, рекомендованные преподавателем. Для демонстрации работы функции организовать вывод данных на экран в консоли.
+
+\subsection{Исходный JSON-файл}
+
+В текстовом редакторе создан файл \texttt{old.json}. Структура данных аналогична XML-каталогу: массивы космонавтов, агентств и миссий (ниже --- латинская версия листинга; в рабочем файле проекта используются русские строки).
+
+\begin{lstlisting}[language={},caption={Файл \texttt{old.json} (фрагмент структуры)}]
+{
+  "astronauts": [
+    {"code": 1, "surname": "Gagarin", "name": "Yuri",
+     "secname": "Alekseevich"},
+    {"code": 3, "surname": "Armstrong", "name": "Neil",
+     "secname": "Alden"},
+    {"code": 4, "surname": "Aldrin", "name": "Buzz",
+     "secname": ""}
+  ],
+  "agencies": [
+    {"code": 1, "name": "Roscosmos", "shortname": "Roscosmos"},
+    {"code": 2, "name": "NASA", "shortname": "NASA"}
+  ],
+  "missions": [
+    {
+      "code": 1,
+      "name": "Vostok-1",
+      "img": "vostok1.png",
+      "year": 1961,
+      "days": 1,
+      "agency": 1,
+      "astronauts": [1]
+    },
+    {
+      "code": 2,
+      "name": "Apollo 11",
+      "img": "apollo11.png",
+      "year": 1969,
+      "days": 8,
+      "agency": 2,
+      "astronauts": [3, 4]
+    }
+  ]
+}
+\end{lstlisting}
+
+Ключи верхнего уровня: \texttt{astronauts}, \texttt{agencies}, \texttt{missions}. У миссии поле \texttt{agency} --- код агентства, поле \texttt{astronauts} --- список кодов членов экипажа.
+
+\subsection{Классы cosmos и data}
+
+Класс \texttt{cosmos} и базовый класс \texttt{data} используются те же, что в задании~2. Дополнительно описывается только наследник \texttt{datajson} для формата JSON.
+
+\subsection{Класс datajson}
+
+Класс \texttt{datajson} наследуется от \texttt{data}; в нём переопределены методы \texttt{read()} и \texttt{write()} с использованием модуля \texttt{json}.
+
+\begin{lstlisting}[caption={Модуль \texttt{datajson.py}: метод \texttt{read()}}]
+import json
+from data import data
+
+class datajson(data):
+    def read(self):
+        with open(self.getInp(), "r", encoding="utf-8") as f:
+            data = json.load(f)
+        for k in data.keys():
+            if k == "astronauts":
+                for a in data[k]:
+                    code, surname, name, secname = 0, "", "", ""
+                    for ak in a.keys():
+                        if ak == "code":
+                            code = a[ak]
+                        if ak == "name":
+                            name = a[ak]
+                        if ak == "surname":
+                            surname = a[ak]
+                        if ak == "secname":
+                            secname = a[ak]
+                    self.getLib().createAstronaut(
+                        code, surname, name, secname)
+            if k == "agencies":
+                for a in data[k]:
+                    code, name, shortname = 0, "", ""
+                    for ak in a.keys():
+                        if ak == "code":
+                            code = a[ak]
+                        if ak == "name":
+                            name = a[ak]
+                        if ak == "shortname":
+                            shortname = a[ak]
+                    self.getLib().createAgency(code, name, shortname)
+            if k == "missions":
+                for a in data[k]:
+                    code, name, img = 0, "", ""
+                    agency, year, days, crew = None, 0, 0, []
+                    for ak in a.keys():
+                        if ak == "code":
+                            code = a[ak]
+                        if ak == "name":
+                            name = a[ak]
+                        if ak == "img":
+                            img = a[ak]
+                        if ak == "year":
+                            year = a[ak]
+                        if ak == "days":
+                            days = a[ak]
+                        if ak == "agency":
+                            agency = self.getLib().getAgency(int(a[ak]))
+                        if ak == "astronauts":
+                            crew = a[ak]
+                    m = self.getLib().createMission(
+                        code, name, agency, year, days, img)
+                    for ac in crew:
+                        person = self.getLib().getAstronaut(ac)
+                        if person and m:
+                            m.appendAstronaut(person)
+\end{lstlisting}
+
+Файл читается через \texttt{json.load}. Для каждого ключа создаются соответствующие объекты каталога. Для миссий сначала создаётся объект, затем в экипаж добавляются космонавты по списку кодов.
+
+\begin{lstlisting}[caption={Модуль \texttt{datajson.py}: метод \texttt{write()}}]
+    def write(self):
+        data = {"astronauts": [], "agencies": [], "missions": []}
+        for a in self.getLib().getAstronautList():
+            ad = {}
+            ad["code"] = a.getCode()
+            ad["surname"] = a.getSurname()
+            ad["name"] = a.getName()
+            ad["secname"] = a.getSecname()
+            data["astronauts"].append(ad)
+        for p in self.getLib().getAgencyList():
+            pd = {}
+            pd["code"] = p.getCode()
+            pd["name"] = p.getName()
+            pd["shortname"] = p.getShortname()
+            data["agencies"].append(pd)
+        for m in self.getLib().getMissionList():
+            md = {}
+            md["code"] = m.getCode()
+            md["name"] = m.getName()
+            md["img"] = m.getImg()
+            md["year"] = m.getYear()
+            md["days"] = m.getDays()
+            md["agency"] = m.getAgencyCode()
+            md["astronauts"] = m.getAstronautCodes()
+            data["missions"].append(md)
+        with open(self.getOut(), "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+\end{lstlisting}
+
+Метод \texttt{write()} формирует словарь той же структуры и сохраняет его через \texttt{json.dump} с параметрами \texttt{indent=2} и \texttt{ensure\_ascii=False} (сохранение кириллицы без экранирования).
+
+\subsection{Демонстрационная программа}
+
+Программа в файле \texttt{main2a.py} создаёт объекты классов \texttt{cosmos} и \texttt{datajson}, читает \texttt{old.json}, выводит данные в консоль и записывает \texttt{new.json}.
+
+\begin{lstlisting}[caption={Модуль \texttt{main2a.py}}]
+from cosmos import cosmos
+from datajson import datajson
+
+catalog = cosmos()
+dat = datajson(catalog, "old.json", "new.json")
+dat.read()
+
+for m in catalog.getMissionList():
+    print(m.getInfoStr())
+
+dat.write()
+\end{lstlisting}
+
+Результат выполнения (фрагмент):
+\begin{quote}
+\ttfamily\footnotesize
+Gagarin Y. A. Vostok-1 - Roscosmos, 1961. - 1 d.\\
+Armstrong N. A., Aldrin B. Apollo 11 - NASA, 1969. - 8 d.\\
+Tereshkova V. V. Vostok-6 - Roscosmos, 1963. - 3 d.
+\end{quote}
+
+Дополнительно реализованы запросы: вывод миссий выбранного агентства, поиск космонавта по коду, контрольное перечитывание \texttt{new.json}.
+
+\subsection{Диаграмма классов UML}
+
+Диаграмма классов для задания~2a приведена на рисунке~\ref{fig:uml2a}. По сравнению с заданием~2 добавлен класс \texttt{datajson} (рядом с \texttt{dataxml} как наследник \texttt{data}).
+
+% ============================================================
+% ВСТАВЬТЕ СЮДА КАРТИНКУ UML ЗАДАНИЯ 2a:
+% 1) Сгенерируйте диаграмму на plantuml.com (скрипт diagram2a.puml)
+% 2) Сохраните файл как report/diagram2a.png
+% ============================================================
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{diagram2a.png}
+\caption{Диаграмма классов для задания 2a}
+\label{fig:uml2a}
+\end{figure}
+
+Скрипт PlantUML содержится в файле \texttt{diagram2a.puml} проекта.
+
+\subsection{Выводы}
+
+В задании~2a реализован класс \texttt{datajson} для чтения и записи каталога космических миссий в формате JSON с использованием классов заданий~1 и~2. Данные из \texttt{old.json} загружаются в объекты, обрабатываются запросами и сохраняются в \texttt{new.json}. Построена диаграмма классов UML.
+
+% =====================================================================
+% Сюда позже: \section{Задание 3. ...}
+% =====================================================================
+
+\end{document}
