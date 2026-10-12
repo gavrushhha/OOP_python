@@ -1,0 +1,41 @@
+@startuml Assignment03_ER
+skinparam linetype ortho
+title ER-диаграмма SQLite (задание 3)
+
+entity "astronaut" {
+  *code : integer
+  --
+  surname : text
+  name : text
+  secname : text
+}
+
+entity "agency" {
+  *code : integer
+  --
+  name : text
+  shortname : text
+}
+
+entity "mission" {
+  *code : integer
+  --
+  name : text
+  img : text
+  year : integer
+  days : integer
+  agency : integer <<FK>>
+}
+
+entity "mission_astronaut" {
+  *code : integer <<generated>>
+  --
+  *mission : integer <<FK>>
+  *astronaut : integer <<FK>>
+}
+
+astronaut |o--o{ mission_astronaut
+mission |o--o{ mission_astronaut
+agency |o--o{ mission
+
+@enduml

@@ -1,0 +1,64 @@
+@startuml Assignment03_SQLite
+skinparam classAttributeIconSize 0
+title Задание 3: космические миссии + SQLite
+
+class general {
+  -__code
+  -__name
+}
+
+class astronaut
+class agency
+class mission
+
+class generalList
+class astronautList
+class agencyList
+class missionList
+
+class cosmos {
+  -__astronautList
+  -__agencyList
+  -__missionList
+}
+
+class data {
+  -__lib
+  -__inp
+  -__out
+  +read()
+  +write()
+}
+
+class dataxml {
+  +read()
+  +write()
+}
+
+class datajson {
+  +read()
+  +write()
+}
+
+class datasql {
+  +read()
+  +write()
+}
+
+general <|-- astronaut
+general <|-- agency
+general <|-- mission
+generalList <|-- astronautList
+generalList <|-- agencyList
+generalList <|-- missionList
+mission o-- astronautList
+mission o-- agency
+cosmos o-- astronautList
+cosmos o-- agencyList
+cosmos o-- missionList
+cosmos --o data
+data <|-- dataxml
+data <|-- datajson
+data <|-- datasql
+
+@enduml

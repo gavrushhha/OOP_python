@@ -7,6 +7,9 @@ new2.xml
 new.xml
 new.json
 new2.json
+new.sqlite
+*.sqlite
+roundtrip.xml
 ooptask*.pdf
 __pycache__/
 *.py[cod]

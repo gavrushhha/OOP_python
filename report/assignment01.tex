@@ -1171,7 +1171,209 @@ Tereshkova V. V. Vostok-6 - Roscosmos, 1963. - 3 d.
 В задании~2a реализован класс \texttt{datajson} для чтения и записи каталога космических миссий в формате JSON с использованием классов заданий~1 и~2. Данные из \texttt{old.json} загружаются в объекты, обрабатываются запросами и сохраняются в \texttt{new.json}. Построена диаграмма классов UML.
 
 % =====================================================================
-% Сюда позже: \section{Задание 3. ...}
+% ЗАДАНИЕ 3
 % =====================================================================
+\clearpage
+\section{Задание 3. Чтение и запись данных в SQLite}
+
+\subsection{Постановка задачи}
+
+Написать функции для считывания и записи данных о выбранных сущностях из базы данных SQLite, используя при этом классы, полученные при выполнении заданий~1 и~2. Реализовать запросы, рекомендованные преподавателем. Для демонстрации работы функции организовать вывод данных на экран в консоли.
+
+\subsection{Схема базы данных}
+
+Для хранения каталога космических миссий используются четыре таблицы. Связь <<многие ко многим>> между миссиями и космонавтами реализуется через таблицу \texttt{mission\_astronaut}.
+
+\begin{lstlisting}[language=SQL,caption={Схема SQLite}]
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE astronaut (
+  code integer primary key,
+  surname text,
+  name text,
+  secname text
+);
+
+CREATE TABLE agency (
+  code integer primary key,
+  name text,
+  shortname text
+);
+
+CREATE TABLE mission (
+  code integer primary key,
+  name text,
+  img text,
+  year integer,
+  days integer,
+  agency integer references agency(code)
+    on update cascade on delete set null
+);
+
+CREATE TABLE mission_astronaut (
+  code integer primary key autoincrement,
+  mission integer references mission(code)
+    on update cascade on delete cascade,
+  astronaut integer references astronaut(code)
+    on update cascade on delete cascade,
+  unique(mission, astronaut)
+);
+\end{lstlisting}
+
+ER-диаграмма приведена на рисунке~\ref{fig:er3}.
+
+% ============================================================
+% ВСТАВЬТЕ СЮДА ER-ДИАГРАММУ:
+% 1) Сгенерируйте на plantuml.com (скрипт diagram3_er.puml)
+% 2) Сохраните как report/diagram3_er.png
+% ============================================================
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{diagram3_er.png}
+\caption{ER-диаграмма базы данных SQLite}
+\label{fig:er3}
+\end{figure}
+
+\subsection{Класс datasql}
+
+Класс \texttt{datasql} наследуется от \texttt{data}; в нём переопределены методы \texttt{read()} и \texttt{write()} с использованием модуля \texttt{sqlite3}.
+
+\begin{lstlisting}[caption={Модуль \texttt{datasql.py}: метод \texttt{read()}}]
+import sqlite3 as db
+from data import data
+
+class datasql(data):
+    def read(self):
+        conn = db.connect(self.getInp())
+        curs = conn.cursor()
+        curs.execute(
+            "select code,surname,name,secname from astronaut")
+        for r in curs.fetchall():
+            self.getLib().createAstronaut(r[0], r[1], r[2], r[3])
+
+        curs.execute("select code,name,shortname from agency")
+        for r in curs.fetchall():
+            self.getLib().createAgency(r[0], r[1], r[2])
+
+        curs.execute(
+            "select code,name,img,year,days,agency from mission")
+        for r in curs.fetchall():
+            agency = None
+            if r[5] is not None:
+                agency = self.getLib().getAgency(int(r[5]))
+            self.getLib().createMission(
+                r[0], r[1], agency, r[3], r[4], r[2])
+
+        curs.execute(
+            "select mission,astronaut from mission_astronaut")
+        for r in curs.fetchall():
+            m = self.getLib().getMission(r[0])
+            person = self.getLib().getAstronaut(r[1])
+            if m and person:
+                m.appendAstronaut(person)
+        conn.close()
+\end{lstlisting}
+
+Сначала загружаются космонавты и агентства, затем миссии (со ссылкой на агентство), затем связи экипажа из \texttt{mission\_astronaut}.
+
+\begin{lstlisting}[caption={Модуль \texttt{datasql.py}: метод \texttt{write()}}]
+    def write(self):
+        conn = db.connect(self.getOut())
+        curs = conn.cursor()
+        curs.executescript(emptydb)
+
+        for a in self.getLib().getAstronautList():
+            curs.execute(
+                "insert into astronaut(code,surname,name,secname)"
+                " values(?,?,?,?)",
+                (a.getCode(), a.getSurname(),
+                 a.getName(), a.getSecname()))
+
+        for p in self.getLib().getAgencyList():
+            curs.execute(
+                "insert into agency(code,name,shortname)"
+                " values(?,?,?)",
+                (p.getCode(), p.getName(), p.getShortname()))
+
+        for m in self.getLib().getMissionList():
+            curs.execute(
+                "insert into mission(code,name,img,year,days,agency)"
+                " values(?,?,?,?,?,?)",
+                (m.getCode(), m.getName(), m.getImg(),
+                 m.getYear(), m.getDays(), m.getAgencyCode()))
+            for ac in m.getAstronautCodes():
+                curs.execute(
+                    "insert into mission_astronaut"
+                    "(mission,astronaut) values(?,?)",
+                    (m.getCode(), ac))
+
+        conn.commit()
+        conn.close()
+\end{lstlisting}
+
+Перед вставкой данных выполняется скрипт \texttt{emptydb}, создающий пустую схему таблиц. Для проверки достаточно иметь исходный XML/JSON: база создаётся программно при записи.
+
+\subsection{Демонстрационная программа}
+
+Программа \texttt{main3.py} проверяет круг обмена данными: XML $\to$ SQLite $\to$ объекты $\to$ XML.
+
+\begin{lstlisting}[caption={Модуль \texttt{main3.py}}]
+import os
+from cosmos import cosmos
+from dataxml import dataxml
+from datasql import datasql
+
+cat1 = cosmos()
+cat2 = cosmos()
+dxml1 = dataxml(cat1, "old.xml", "new.xml")
+dxml2 = dataxml(cat2, "old.xml", "roundtrip.xml")
+dsql1 = datasql(cat1, "new.sqlite", "new.sqlite")
+dsql2 = datasql(cat2, "new.sqlite", "new.sqlite")
+
+dxml1.read()
+if os.path.isfile(dsql1.getOut()):
+    os.remove(dsql1.getOut())
+dsql1.write()
+dsql2.read()
+
+for m in cat2.getMissionList():
+    print(m.getInfoStr())
+
+dxml2.write()
+\end{lstlisting}
+
+Сначала данные читаются из \texttt{old.xml} в первый каталог, записываются в \texttt{new.sqlite}, затем читаются во второй каталог и выводятся в консоль; дополнительно сохраняется \texttt{roundtrip.xml}.
+
+Результат выполнения (фрагмент):
+\begin{quote}
+\ttfamily\footnotesize
+Gagarin Y. A. Vostok-1 - Roscosmos, 1961. - 1 d.\\
+Armstrong N. A., Aldrin B. Apollo 11 - NASA, 1969. - 8 d.\\
+Tereshkova V. V. Vostok-6 - Roscosmos, 1963. - 3 d.
+\end{quote}
+
+Дополнительно реализованы запросы: вывод миссий выбранного агентства, контроль числа сущностей после круга обмена.
+
+\subsection{Диаграмма классов UML}
+
+Диаграмма классов для задания~3 приведена на рисунке~\ref{fig:uml3}. По сравнению с заданием~2a добавлен класс \texttt{datasql} как ещё один наследник \texttt{data}.
+
+% ============================================================
+% ВСТАВЬТЕ СЮДА UML ЗАДАНИЯ 3:
+% 1) Сгенерируйте на plantuml.com (скрипт diagram3.puml)
+% 2) Сохраните как report/diagram3.png
+% ============================================================
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{diagram3.png}
+\caption{Диаграмма классов для задания 3}
+\label{fig:uml3}
+\end{figure}
+
+Скрипты PlantUML: \texttt{diagram3.puml} (классы), \texttt{diagram3\_er.puml} (ER).
+
+\subsection{Выводы}
+
+В задании~3 реализован класс \texttt{datasql} для чтения и записи каталога космических миссий в SQLite. Проверена цепочка обмена XML~$\to$~SQLite~$\to$~XML с использованием классов предыдущих заданий. Выполнены типовые запросы, построены диаграммы классов и ER.
 
 \end{document}
